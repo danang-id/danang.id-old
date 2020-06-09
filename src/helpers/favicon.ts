@@ -1,15 +1,15 @@
-function setFavicon(isDarkMode: boolean) {
+export function setFavicon(isDarkMode: boolean) {
     // Change elements with favicon class
     const faviconElements = document.getElementsByClassName("favicon")
     for (let index = 0; index < faviconElements.length; index++) {
         const favicon = faviconElements[index]
         const attribute = favicon.attributes.getNamedItem("href")
         if (attribute !== null) {
-            const currentModeIsDark = attribute.value.indexOf("/favicon-bw-inverted/") !== -1
+            const currentModeIsDark = attribute.value.indexOf("/app-dark/") !== -1
             if (currentModeIsDark !== isDarkMode) {
                 const attributeValue = isDarkMode
-                    ? attribute.value.replace("/favicon-bw/", "/favicon-bw-inverted/")
-                    : attribute.value.replace("/favicon-bw-inverted/", "/favicon-bw/")
+                    ? attribute.value.replace("/app-light/", "/app-dark/")
+                    : attribute.value.replace("/app-dark/", "/app-light/")
                 favicon.setAttribute("href", attributeValue)
             }
         }
@@ -20,11 +20,11 @@ function setFavicon(isDarkMode: boolean) {
         const appImage = appImageElements[index]
         const attribute = appImage.attributes.getNamedItem("content")
         if (attribute !== null) {
-            const currentModeIsDark = attribute.value.indexOf("/favicon-bw-inverted/") !== -1
+            const currentModeIsDark = attribute.value.indexOf("/app-dark/") !== -1
             if (currentModeIsDark !== isDarkMode) {
                 const attributeValue = isDarkMode
-                    ? attribute.value.replace("/favicon-bw/", "/favicon-bw-inverted/")
-                    : attribute.value.replace("/favicon-bw-inverted/", "/favicon-bw/")
+                    ? attribute.value.replace("/app-light/", "/app-dark/")
+                    : attribute.value.replace("/app-dark/", "/app-light/")
                 appImage.setAttribute("content", attributeValue)
             }
         }
@@ -41,15 +41,5 @@ function setFavicon(isDarkMode: boolean) {
                 appColor.setAttribute("content", attributeValue)
             }
         }
-    }
-}
-
-export function setDynamicFavicon() {
-    if (window && window.matchMedia) {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-        setFavicon(mediaQuery.matches)
-        mediaQuery.addEventListener("change", (newMediaQuery) => {
-            setFavicon(newMediaQuery.matches)
-        })
     }
 }
