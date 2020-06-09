@@ -7,20 +7,36 @@ import Home from "./pages/Home/Home"
 import "./Application.scss"
 
 function Application() {
-	const [mediaQuery, setMediaQuery] = useState(window.matchMedia("(prefers-color-scheme: dark)"))
+	const [mediaQueryList, setMediaQueryList] = useState(window.matchMedia("(prefers-color-scheme: dark)"))
 	const dispatch = useDispatch()
 
 	useEffect(() => {
 		function eventListener(this: MediaQueryList) {
-			setMediaQuery(this)
+			setMediaQueryList(this)
 			dispatch(setDarkMode(this.matches))
-			setFavicon(mediaQuery.matches)
+			setFavicon(mediaQueryList.matches)
 		}
-		dispatch(setDarkMode(mediaQuery.matches))
-		setFavicon(mediaQuery.matches)
-		mediaQuery.addEventListener("change", eventListener)
+		dispatch(setDarkMode(mediaQueryList.matches))
+		setFavicon(mediaQueryList.matches)
+		try {
+			mediaQueryList.addEventListener("change", eventListener)
+		} catch (e1) {
+			try {
+				mediaQueryList.addListener(eventListener)
+			} catch (e2) {
+				console.error(e2)
+			}
+		}
 		return () => {
-			mediaQuery.removeEventListener("change", eventListener)
+			try {
+				mediaQueryList.removeEventListener("change", eventListener)
+			} catch (e1) {
+				try {
+					mediaQueryList.removeListener(eventListener)
+				} catch (e2) {
+					console.error(e2)
+				}
+			}
 		}
 	})
 
